@@ -1,11 +1,11 @@
-import { EventSourceMessage, getBytes, getLines, getMessages } from './parse'
+import { SourceMessage, getBytes, getLines, getMessages } from './parse'
 
-export const EventStreamContentType = 'text/event-stream'
+export const StreamContentType = 'text/event-stream'
 
 const DefaultRetryInterval = 1000
 const LastEventId = 'last-event-id'
 
-export interface FetchEventSourceInit extends RequestInit {
+export interface FetchSourceInit extends RequestInit {
   /**
    * The request headers. FetchEventSource only supports the Record<string,string> format.
    */
@@ -23,7 +23,7 @@ export interface FetchEventSourceInit extends RequestInit {
    * EventSource.onmessage, this callback is called for _all_ events,
    * even ones with a custom `event` field.
    */
-  onmessage?: (ev: EventSourceMessage) => void
+  onmessage?: (ev: SourceMessage) => void
 
   /**
    * Called when a response finishes. If you don't expect the server to kill
@@ -37,14 +37,14 @@ export interface FetchEventSourceInit extends RequestInit {
    * error is fatal, rethrow the error inside the callback to stop the entire
    * operation. Otherwise, you can return an interval (in milliseconds) after
    * which the request will automatically retry (with the last-event-id).
-   * If this callback is not specified, or it returns undefined, fetchEventSource
+   * If this callback is not specified, or it returns undefined, fetchSource
    * will treat every error as retriable and will try again after 1 second.
    */
   onerror?: (err: any) => number | null | undefined | void
 
   /**
    * If true, will keep the request open even if the document is hidden.
-   * By default, fetchEventSource will close the request and reopen it
+   * By default, fetchSource will close the request and reopen it
    * automatically when the document becomes visible again.
    */
   openWhenHidden?: boolean
@@ -53,7 +53,7 @@ export interface FetchEventSourceInit extends RequestInit {
   fetch?: typeof fetch
 }
 
-export function fetchEventSource(
+export function fetchSource(
   input: RequestInfo,
   {
     signal: inputSignal,
@@ -65,13 +65,13 @@ export function fetchEventSource(
     openWhenHidden,
     fetch: inputFetch,
     ...rest
-  }: FetchEventSourceInit
+  }: FetchSourceInit
 ) {
   return new Promise<void>((resolve, reject) => {
     // make a copy of the input headers since we may modify it below:
     const headers = { ...inputHeaders }
     if (!headers.accept) {
-      headers.accept = EventStreamContentType
+      headers.accept = StreamContentType
     }
 
     let curRequestController: AbortController
@@ -164,9 +164,9 @@ export function fetchEventSource(
 
 function defaultOnOpen(response: Response) {
   const contentType = response.headers.get('content-type')
-  if (!contentType?.startsWith(EventStreamContentType)) {
+  if (!contentType?.startsWith(StreamContentType)) {
     throw new Error(
-      `Expected content-type to be ${EventStreamContentType}, Actual: ${contentType}`
+      `Expected content-type to be ${StreamContentType}, Actual: ${contentType}`
     )
   }
 }

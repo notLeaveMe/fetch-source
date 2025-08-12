@@ -2,7 +2,7 @@
  * Represents a message sent in an event stream
  * https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format
  */
-export interface EventSourceMessage {
+export interface SourceMessage {
     /** The event ID to set the EventSource object's last event ID value. */
     id: string;
     /** A string identifying the type of event described. */
@@ -119,7 +119,7 @@ export function getLines(onLine: (line: Uint8Array, fieldLength: number) => void
 export function getMessages(
     onId: (id: string) => void,
     onRetry: (retry: number) => void,
-    onMessage?: (msg: EventSourceMessage) => void
+    onMessage?: (msg: SourceMessage) => void
 ) {
     let message = newMessage();
     const decoder = new TextDecoder();
@@ -169,7 +169,7 @@ function concat(a: Uint8Array, b: Uint8Array) {
     return res;
 }
 
-function newMessage(): EventSourceMessage {
+function newMessage(): SourceMessage {
     // data, event, and id must be initialized to empty strings:
     // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
     // retry should be initialized to undefined so we return a consistent shape
