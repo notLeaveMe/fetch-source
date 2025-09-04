@@ -76,15 +76,13 @@ fetchSource('/api/sse', {
     }
     // 其它业务处理
   },
-  onclose() {
+  onclose(res) {
+    console.log(res)
     // 连接关闭时的处理
   },
   onerror(err) {
     // 错误处理
     throw err // 阻止继续请求
   },
-}).then((res) => {
-  // 此次处理接口返回的非流式数据，如登录失效时返回的json
-  console.log(res)
 })
 ```

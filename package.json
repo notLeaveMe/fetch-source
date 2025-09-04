@@ -1,6 +1,6 @@
 {
   "name": "fetch-request-source",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A better API for making Source requests, with all the features of fetch()",
   "homepage": "https://github.com/notLeaveMe/fetch-source#readme",
   "repository": "github:notLeaveMe/fetch-source",

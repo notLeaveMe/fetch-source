@@ -29,7 +29,7 @@ export interface FetchSourceInit extends RequestInit {
    * Called when a response finishes. If you don't expect the server to kill
    * the connection, you can throw an exception here and retry using onerror.
    */
-  onclose?: () => void
+  onclose?: (response: Response) => void
 
   /**
    * Called when there is any error making the request / processing messages /
@@ -138,7 +138,7 @@ export function fetchSource(
           )
         )
 
-        onclose?.()
+        onclose?.(responseClone)
         dispose()
         resolve(responseClone)
       } catch (err) {
